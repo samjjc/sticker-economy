@@ -13,3 +13,4 @@ name = "pypi"
 
 django = "*"
 gunicorn = "*"
+django-heroku = "*"
