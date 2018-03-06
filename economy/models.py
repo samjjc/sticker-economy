@@ -7,7 +7,7 @@ class Sticker(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=300)
     created_date = models.DateTimeField(default=timezone.now)
-    image = models.ImageField(upload_to='media/', null=True)
+    image = models.ImageField(upload_to='media')
 
     def __str__(self):
         return self.title

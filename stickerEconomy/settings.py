@@ -121,10 +121,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# MEDIA_ROOT = '/home/dan/mysite/media/'
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media", "media_root")
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "stickerEconomy")
 
-MEDIA_URL = '/media/'
+MEDIA_URL='/media/'
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())

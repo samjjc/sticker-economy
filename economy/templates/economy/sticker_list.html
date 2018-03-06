@@ -11,7 +11,7 @@
                 <p>{{ sticker.description|linebreaksbr }}</p>
             </div>
             <div class="col-sm-6">
-                    <img src={{ sticker.image }}, alt="Sticker image"></img>
+                <img src="{{ sticker.image.url }}" alt="Sticker image" height="200"></img>
             </div>
         </div>
     {% endfor %}

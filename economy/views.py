@@ -13,7 +13,7 @@ def sticker_detail(request, pk):
 
 def sticker_new(request):
     if request.method == "POST":
-        form = StickerForm(request.POST)
+        form = StickerForm(request.POST, request.FILES)
         if form.is_valid():
             sticker = form.save(commit=False)
             sticker.owner = request.user
