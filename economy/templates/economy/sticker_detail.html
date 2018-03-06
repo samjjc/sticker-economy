@@ -1,0 +1,12 @@
+{% extends 'economy/base.html' %}
+
+{% block content %}
+    <div class="sticker">
+        <div class="date">{{ sticker.created_date }}</div>
+        {% if user.is_authenticated %}
+            <a class="btn btn-default" href="{% url 'sticker_edit' pk=sticker.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        {% endif %}
+        <h1>{{ sticker.title }}</h1>
+        <p>{{ sticker.description|linebreaksbr }}</p>
+    </div>
+{% endblock %}
