@@ -29,9 +29,13 @@
 }
 
 .top-menu, .top-menu:hover, .top-menu:visited {
-    color: #ffffff;
     float: right;
-    font-size: 26pt;
+    margin-right: 20px;
+}
+
+.top-menu-image, .top-menu-image:hover, .top-menu-image:visited {
+    float: right;
+    font-size: 20pt;
     margin-right: 20px;
 }
 
