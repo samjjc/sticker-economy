@@ -121,7 +121,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "stickerEconomy")
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "sticker-trade")
 
 MEDIA_URL='/media/'
 

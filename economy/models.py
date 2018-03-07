@@ -11,6 +11,7 @@ class Sticker(models.Model):
     description = models.CharField(max_length=300)
     created_date = models.DateTimeField(default=timezone.now)
     image = models.ImageField(upload_to='media')
+    quantity = models.IntegerField(default = 1)
 
     def __str__(self):
         return self.title
