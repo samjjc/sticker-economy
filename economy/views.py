@@ -56,17 +56,12 @@ def signup_view(request):
 def login_view(request):
     if request.method == 'POST':
         form = LogInForm(data = request.POST)
-        # print(form)
         if form.is_valid():
             user = form.cleaned_data
             user = authenticate(username=user.get('username'), password=user.get('password'))
             if user is not None:
                 login(request, user)
                 return redirect('sticker_list')
-            else:
-                print("USER IS NONE")
-        else:
-            print("FORM IS INVALID")
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
@@ -74,3 +69,12 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('sticker_list')
+
+def profile_view(request):
+    if request.user.is_authenticated:
+        stickers = Sticker.objects.all()
+        user = request.user
+        return render(request, 'economy/profile.html', {'stickers': stickers, 'user': user})
+    else:
+        return redirect('sticker_list')
+
