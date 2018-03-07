@@ -43,8 +43,8 @@
     margin-bottom: 70px;
 }
 
-.black{
-    color: #000000;
+.right{
+    float: right;
 }
 
 .sticker h1 a, .post h1 a:visited {
