@@ -4,11 +4,12 @@
     <div class="jumbotron row">
         <div class = "col-md-6">
             <p>created: {{ sticker.created_date }}</p>
+            <p><a href="{% url 'profile' pk=sticker.owner.pk %}">owner: {{sticker.owner}}</a></p>
             <h1>{{ sticker.title }}</h1>
             <p>{{ sticker.description|linebreaksbr }}</p>
         </div>
         <div class="col-sm-6">
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and user == sticker.owner%}
                 <a class="btn btn-default right" href="{% url 'sticker_edit' pk=sticker.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
             {% endif %}
             <img src="{{ sticker.image.url }}" alt="Sticker image" height="200"></img>

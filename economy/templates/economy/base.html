@@ -10,7 +10,7 @@
     <body>
             {% if user.is_authenticated %}
                 <a href="{% url 'sticker_new' %}" class="top-menu-image"><span class="glyphicon glyphicon-plus"></span></a>
-                <h2><a href="/profile/" class="top-menu">Profile</a></h2>
+                <h2><a href="{% url 'profile' pk=user.pk %}" class="top-menu">Profile</a></h2>
                 <h2><a href="/logout/" class="top-menu">Log out</a></h2>
                 {% else %}
                 <h2><a href="/signup/" class="top-menu">Sign up</a></h2>

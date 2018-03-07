@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, authenticate, logout
 from .models import Sticker
+from django.contrib.auth.models import User
 from .forms import StickerForm, SignUpForm, LogInForm
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -70,11 +71,10 @@ def logout_view(request):
     logout(request)
     return redirect('sticker_list')
 
-def profile_view(request):
-    if request.user.is_authenticated:
-        stickers = Sticker.objects.all()
-        user = request.user
-        return render(request, 'economy/profile.html', {'stickers': stickers, 'user': user})
-    else:
-        return redirect('sticker_list')
+def profile_view(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    stickers = Sticker.objects.filter(owner=user)
+    return render(request, 'economy/profile.html', {'stickers': stickers, 'user': user})
+
+
 
