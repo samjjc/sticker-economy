@@ -1,0 +1,17 @@
+{% extends 'economy/base.html' %}
+
+{% block content %}
+    {% for request in requests %}
+
+        <div class="jumbotron row">
+            <div class = "col-md-6">
+                    <img src="{{ request.requested_sticker.image.url }}" alt="Sticker image" height="100"></img>
+                    <p>{{request.requested_quantity}}</p>
+                    <img src="{{ request.requested_sticker.image.url }}" alt="Sticker image" height="100"></img>
+                    <p>{{request.given_quantity}}</p>
+                    <p>{{request.message}}</p>
+                    <p><a href="{% url 'trade' pk=request.pk %}">Accept Trade</a></p>
+            </div>
+        </div>
+    {% endfor%}
+{% endblock %}

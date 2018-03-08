@@ -4,11 +4,8 @@
     {% for sticker in stickers %}
         <div class="jumbotron row">
             <div class = "col-md-6">
-                <div class="date">
-                    <p>published: {{ sticker.created_date }}</p>
-                </div>
                 <h1><a href="{% url 'sticker_detail' pk=sticker.pk %}">{{ sticker.title }}</a></h1>
-                <p>{{ sticker.description|linebreaksbr }}</p>
+                <p>Quanitiy: {{ sticker.quantity }}</p>
             </div>
             <div class="col-sm-6">
                 <img src="{{ sticker.image.url }}" alt="Sticker image" height="200"></img>

@@ -3,16 +3,22 @@
 {% block content %}
     <div class="jumbotron row">
         <div class = "col-md-6">
-            <p>created: {{ sticker.created_date }}</p>
             <p><a href="{% url 'profile' pk=sticker.owner.pk %}">owner: {{sticker.owner}}</a></p>
             <h1>{{ sticker.title }}</h1>
             <p>{{ sticker.description|linebreaksbr }}</p>
+            <p>Quanitiy: {{ sticker.quantity }}</p>
+            <p>Created: {{ sticker.created_date }}</p>
         </div>
         <div class="col-sm-6">
             {% if user.is_authenticated and user == sticker.owner%}
+                <a class="btn btn-default right" href="{% url 'sticker_delete' pk=sticker.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
                 <a class="btn btn-default right" href="{% url 'sticker_edit' pk=sticker.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
             {% endif %}
             <img src="{{ sticker.image.url }}" alt="Sticker image" height="200"></img>
+            {% if user.is_authenticated and user != sticker.owner%}
+            <p><a href="{% url 'sticker_trade' pk=sticker.pk %}">Request Trade</a></p>
+            {% endif %}
+            <p><a href="{% url 'trade_requests' pk=sticker.pk %}">Pending trade requests</a></p>
         </div>
     </div>
 {% endblock %}

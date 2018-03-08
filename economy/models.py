@@ -27,3 +27,11 @@ def update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
+
+class TradeRequest(models.Model):
+    requested_sticker = models.ForeignKey(Sticker, on_delete=models.CASCADE, related_name='requested')
+    requested_quantity = models.IntegerField(default = 1)
+    given_sticker = models.ForeignKey(Sticker, on_delete=models.CASCADE, related_name='given')
+    given_quantity = models.IntegerField(default = 1)
+    message = models.TextField(default="Hey, I want to make a trade.")
+

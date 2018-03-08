@@ -1,0 +1,10 @@
+{% extends 'economy/base.html' %}
+
+{% block content %}
+    <h1>Request a Trade for {{sticker.title}}  <img src="{{ sticker.image.url }}" alt="Sticker image" height="50"></img></h1>
+    <form method="POST" class="sticker-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Make Trade</button>
+    </form>
+{% endblock %}
