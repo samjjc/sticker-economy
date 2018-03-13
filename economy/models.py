@@ -11,7 +11,7 @@ class Sticker(models.Model):
     description = models.CharField(max_length=300)
     created_date = models.DateTimeField(default=timezone.now)
     image = models.ImageField(upload_to='media')
-    quantity = models.IntegerField(default = 1)
+    quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return self.title
@@ -34,4 +34,4 @@ class TradeRequest(models.Model):
     given_sticker = models.ForeignKey(Sticker, on_delete=models.CASCADE, related_name='given')
     given_quantity = models.IntegerField(default = 1)
     message = models.TextField(default="Hey, I want to make a trade.")
-
+    accepted = models.BooleanField(default=False)

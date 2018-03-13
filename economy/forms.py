@@ -26,18 +26,17 @@ class LogInForm(AuthenticationForm):
 
 class TradeRequestForm(forms.ModelForm):
 
-    requested_quantity = forms.IntegerField(min_value=0)
-    given_quantity = forms.IntegerField(min_value=0)
+    given_quantity = forms.IntegerField(min_value=0, initial=1)
 
     class Meta:
         model = TradeRequest
         fields = ('requested_quantity', 'given_sticker', 'given_quantity', 'message')
-        
-    # def __init__(self, *args, **kwargs):
-        # user = kwargs.pop('user')
-        # super(TradeRequestForm, self).__init__(args, kwargs)
-        # print(type(user.sticker_set.all()))
-        # print("TEST")
-        # print(self.fields['given_sticker'])
-        # self.fields['given_sticker'].choices = user.sticker_set.all()
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        sticker = kwargs.pop('sticker')
+        super(TradeRequestForm, self).__init__(*args, **kwargs)
+        self.fields['given_sticker'].queryset = user.sticker_set.all()
+        self.fields['requested_quantity']= forms.IntegerField(min_value=0,initial=1, max_value=sticker.quantity)
+    
 

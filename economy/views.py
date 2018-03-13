@@ -4,6 +4,7 @@ from .models import Sticker, TradeRequest
 from django.contrib.auth.models import User
 from .forms import StickerForm, SignUpForm, LogInForm, TradeRequestForm
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
 
 # Create your views here.
 def sticker_list(request):
@@ -67,6 +68,7 @@ def login_view(request):
             user = authenticate(username=user.get('username'), password=user.get('password'))
             if user is not None:
                 login(request, user)
+                messages.add_message(request, messages.SUCCESS, 'Login Successful')
                 return redirect('sticker_list')
     else:
         form = AuthenticationForm()
@@ -74,6 +76,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
+    messages.add_message(request, messages.INFO, 'Logged Out')
     return redirect('sticker_list')
 
 def profile_view(request, pk):
@@ -89,14 +92,18 @@ def sticker_trade(request, pk):
             trade = form.save(commit=False)
             trade.requested_sticker = sticker
             trade.save()
+            messages.add_message(request, messages.SUCCESS, 'Request sent')
             return redirect('sticker_list')
-
     else:
-
-        # form = TradeRequestForm(user=User.objects.filter(pk=request.user.pk))
-        # form = TradeRequestForm(user=request.user)
-        form = TradeRequestForm()
+        form = TradeRequestForm(user=request.user, sticker=sticker)
     return render(request, 'economy/sticker_trade.html', {'sticker': sticker, 'form': form})
+
+def accept_trade(request, pk):
+    trade = get_object_or_404(TradeRequest, pk=pk)
+    trade.accepted = True
+    trade.save()
+    messages.add_message(request, messages.SUCCESS, 'Trade Accepted')
+    return redirect('sticker_list')
 
 def trade_requests(request, pk):
     sticker = get_object_or_404(Sticker, pk=pk)
@@ -106,15 +113,13 @@ def trade_requests(request, pk):
 def trade(request, pk):
     trade = get_object_or_404(TradeRequest, pk=pk)
 
-    # given_owner = trade.given_sticker.owner
-    # given_sticker = trade.given_sticker
-    # requested_owner = trade.requested_sticker.owner
-    # requested_sticker = trade.requested_sticker
-
-    # requested_sticker.quantity -= trade.requested_quantity
-    # given_sticker.quantity -= trade.given_quantity
-    # if given_owner.sticker_set.filter(title=requested_sticker.title).count() == 0:
-    #     Sticker.object.create(owner = given_owner, title=)
-    # else:
-
+    give_stickers(trade.given_sticker, trade.given_quantity)
+    give_stickers(trade.requested_sticker, trade.requested_quantity)
+    messages.add_message(request, messages.SUCCESS, 'Trade Successful')
     return redirect('sticker_list')
+
+def give_stickers(sticker, quantity):
+    if sticker.quantity == quantity:
+        sticker.delete()
+    else:
+        sticker.quantity -= quantity
