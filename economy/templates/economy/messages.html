@@ -1,0 +1,22 @@
+{% extends 'economy/base.html' %}
+{% load staticfiles %}
+{% block extra_head %}
+    <script src="{% static "main.js" %}"></script>
+{% endblock %}
+
+
+{% block content %}
+    <div class="jumbotron row">
+        <div class = "col-md-6">
+                <ul class = "rooms">
+                    {% for room in rooms %}
+                        <li class="room-link" data-room-id="{{ room.id }}">{{ room }}</li>
+                    {% empty %}
+                        <p class="empty">No chat rooms defined. Maybe make some in the <a href="{% url 'admin:index' %}">admin</a>?</p>
+                    {% endfor %}
+                </ul>
+                <div id="chats">
+                    </div>
+        </div>
+    </div>
+{% endblock %}

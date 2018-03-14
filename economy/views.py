@@ -1,10 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, authenticate, logout
-from .models import Sticker, TradeRequest
+from .models import Sticker, TradeRequest, Room
 from django.contrib.auth.models import User
 from .forms import StickerForm, SignUpForm, LogInForm, TradeRequestForm
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib import messages
 
 # Create your views here.
 def sticker_list(request):
@@ -68,7 +67,6 @@ def login_view(request):
             user = authenticate(username=user.get('username'), password=user.get('password'))
             if user is not None:
                 login(request, user)
-                messages.add_message(request, messages.SUCCESS, 'Login Successful')
                 return redirect('sticker_list')
     else:
         form = AuthenticationForm()
@@ -76,7 +74,6 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    messages.add_message(request, messages.INFO, 'Logged Out')
     return redirect('sticker_list')
 
 def profile_view(request, pk):
@@ -92,7 +89,6 @@ def sticker_trade(request, pk):
             trade = form.save(commit=False)
             trade.requested_sticker = sticker
             trade.save()
-            messages.add_message(request, messages.SUCCESS, 'Request sent')
             return redirect('sticker_list')
     else:
         form = TradeRequestForm(user=request.user, sticker=sticker)
@@ -102,7 +98,6 @@ def accept_trade(request, pk):
     trade = get_object_or_404(TradeRequest, pk=pk)
     trade.accepted = True
     trade.save()
-    messages.add_message(request, messages.SUCCESS, 'Trade Accepted')
     return redirect('sticker_list')
 
 def trade_requests(request, pk):
@@ -115,8 +110,14 @@ def trade(request, pk):
 
     give_stickers(trade.given_sticker, trade.given_quantity)
     give_stickers(trade.requested_sticker, trade.requested_quantity)
-    messages.add_message(request, messages.SUCCESS, 'Trade Successful')
     return redirect('sticker_list')
+
+def messages(request):
+    # user = get_object_or_404(User, pk=pk)
+    rooms = Room.objects.all()
+    return render(request, 'economy/messages.html', {'rooms': rooms})
+
+
 
 def give_stickers(sticker, quantity):
     if sticker.quantity == quantity:

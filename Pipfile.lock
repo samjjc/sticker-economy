@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fdcf253dbf30d396700bc04870e86f531246b0e839056e89dba5496884079c3a"
+            "sha256": "7410d0ea218487cc982a5acf2d8e1293514e252371eead5e457d8f707d2c2c07"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -27,19 +27,19 @@
         ]
     },
     "default": {
+        "asgi-redis": {
+            "hashes": [
+                "sha256:ad724d382617b34c2cae08a8c43eb9999f7e695c11e9c534d28b7db0042b898e",
+                "sha256:f1f7a86439d764a6cd6c11d165a500d7287d5447ac8eb4c7b2483456cf3cb383"
+            ],
+            "version": "==1.4.3"
+        },
         "asgiref": {
             "hashes": [
-                "sha256:dae829002a586d96c37333562d78b78f7536cf49e1c189e151be6a62c5806ab0",
-                "sha256:9bf5cd9c9cabfb04e19b96fd44ea17723d111067f9ed1d2d8bbc6398c869b9ba"
+                "sha256:d69847e3164957f4e6da51d2f1192b920c6c7d626bd3fc55f47aa1295702a0ed",
+                "sha256:8b46c3d6e2ad354d9da3cfb9873f9bd46fe1b768fbc11065275ba5430a46700c"
             ],
-            "version": "==2.2.0"
-        },
-        "async-timeout": {
-            "hashes": [
-                "sha256:9093db5b8ddbe4b8f6885d1a6e0ad84ae3155464cbf6877c387605244c285f3c",
-                "sha256:00cff4d2dce744607335cba84e9929c3165632da2d27970dbc55802a0c7873d0"
-            ],
-            "version": "==2.0.1"
+            "version": "==1.1.2"
         },
         "attrs": {
             "hashes": [
@@ -64,10 +64,10 @@
         },
         "channels": {
             "hashes": [
-                "sha256:13e682b304e28d1acdd21f8a16bd3c8ed224f5f45fb8aa1a8a28efb8fe25706d",
-                "sha256:5d41e0f2aa40f9755f36c2c1dd83748b6793732190d577922e06294a3b37fd92"
+                "sha256:396932bf104fbc0fe5b42fd3b48ada9c7f004c20ce38fcdb710fcb20b41750cf",
+                "sha256:a9005bcb6104d26a7f93d9cf012bcf6765a0ff444a449ac68d6e1f16721f8ed3"
             ],
-            "version": "==2.0.2"
+            "version": "==1.1.5"
         },
         "constantly": {
             "hashes": [
@@ -78,10 +78,10 @@
         },
         "daphne": {
             "hashes": [
-                "sha256:ba182583e5e0935666d1e3656fb78aa7555372795c63a5710a022a155e78a0bd",
-                "sha256:eb15e94269310b61e231f46dfe9833a05d663025bee1cbab16a2388bac445b8e"
+                "sha256:fcbf720555eb0e26cdc3883dc9a910be03a294b30b742acfbb4f5e7408875376",
+                "sha256:302725f223853b05688f28c361e050f8db9568b1ce27340c76272c26b49e6d72"
             ],
-            "version": "==2.1.0"
+            "version": "==1.4.2"
         },
         "dj-database-url": {
             "hashes": [
@@ -131,6 +131,12 @@
                 "sha256:7b751696aaf36eebfab537e458929e194460051ccad279c72b755a167eebd4b3"
             ],
             "version": "==17.5.0"
+        },
+        "msgpack-python": {
+            "hashes": [
+                "sha256:378cc8a6d3545b532dfd149da715abae4fda2a3adb6d74e525d0d5e51f46909b"
+            ],
+            "version": "==0.5.6"
         },
         "pillow": {
             "hashes": [
@@ -256,6 +262,13 @@
             ],
             "version": "==2018.3"
         },
+        "redis": {
+            "hashes": [
+                "sha256:8a1900a9f2a0a44ecf6e8b5eb3e967a9909dfed219ad66df094f27f7d6f330fb",
+                "sha256:a22ca993cea2962dbb588f9f30d0015ac4afcc45bee27d3978c0dbe9e97c6c0f"
+            ],
+            "version": "==2.10.6"
+        },
         "six": {
             "hashes": [
                 "sha256:832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb",
@@ -277,6 +290,13 @@
                 "sha256:dfc3a7d04b4b484ae5ff241affab5bb01306b1e950dd6f54fd036cfca94345d0"
             ],
             "version": "==2.9.0"
+        },
+        "websocket-client": {
+            "hashes": [
+                "sha256:188b68b14fdb2d8eb1a111f21b9ffd2dbf1dbc4e4c1d28cf2c37cdbf1dd1cae6",
+                "sha256:a453dc4dfa6e0db3d8fd7738a308a88effe6240c59f3226eb93e8f020c216149"
+            ],
+            "version": "==0.47.0"
         },
         "whitenoise": {
             "hashes": [
