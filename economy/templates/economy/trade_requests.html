@@ -10,7 +10,7 @@
                     <img src="{{ request.requested_sticker.image.url }}" alt="Sticker image" height="100"></img>
                     <p>{{request.given_quantity}}</p>
                     <p>{{request.message}}</p>
-                    <p><a href="{% url 'trade' pk=request.pk %}">Accept Trade</a></p>
+                    <p><a href="{% url 'accept_trade' pk=request.pk %}">Accept Trade</a></p>
             </div>
         </div>
     {% endfor%}

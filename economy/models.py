@@ -45,11 +45,8 @@ class Room(models.Model):
     """
     A room for people to chat in.
     """
-    title = models.CharField(max_length=255)
-    staff_only = models.BooleanField(default=False)
+    users = models.ManyToManyField(User)
 
-    def str(self):
-        return self.title
 
     @property
     def websocket_group(self):
@@ -69,3 +66,7 @@ class Room(models.Model):
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
         )
+
+    @property
+    def get_title(self, user):
+        return self.users.exclude(pk=user.pk).values('first_name')

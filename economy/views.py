@@ -84,7 +84,7 @@ def profile_view(request, pk):
 def sticker_trade(request, pk):
     sticker = get_object_or_404(Sticker, pk=pk)
     if request.method == 'POST':
-        form = TradeRequestForm(data = request.POST)
+        form = TradeRequestForm(data = request.POST, user=request.user, sticker=sticker)
         if form.is_valid():
             trade = form.save(commit=False)
             trade.requested_sticker = sticker
@@ -98,7 +98,14 @@ def accept_trade(request, pk):
     trade = get_object_or_404(TradeRequest, pk=pk)
     trade.accepted = True
     trade.save()
-    return redirect('sticker_list')
+
+    room = Room.objects.create(title="-_-")
+    room.save()
+    room.users.add(trade.given_sticker.owner)
+    room.users.add(trade.requested_sticker.owner)
+    room.save()
+
+    return redirect('messages')
 
 def trade_requests(request, pk):
     sticker = get_object_or_404(Sticker, pk=pk)
@@ -113,8 +120,10 @@ def trade(request, pk):
     return redirect('sticker_list')
 
 def messages(request):
-    # user = get_object_or_404(User, pk=pk)
-    rooms = Room.objects.all()
+    current_user = request.user
+    rooms = current_user.room_set.all()
+    for room in rooms:
+        room.sender=room.users.exclude(pk=request.user.pk).values('username').first()['username']
     return render(request, 'economy/messages.html', {'rooms': rooms})
 
 

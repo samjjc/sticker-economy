@@ -54,9 +54,6 @@ def chat_join(message):
     # object that works just like request.user would. Security!
 
     room = get_room_or_error(message["room"], message.user)
-    print("THIS IS THE MESSAGE:")
-    print(room)
-    print("END MESSAGE")
 
     # Send a "enter message" to the room if available
     if settings.NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
@@ -65,14 +62,19 @@ def chat_join(message):
     # OK, add them in. The websocket_group is what we'll send messages
     # to so that everyone in the chat room gets them.
     room.websocket_group.add(message.reply_channel)
-    message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([room.id]))
+    message.channel_session['rooms'] = set(message.channel_session['rooms']).union([room.id])
     # Send a message back that will prompt them to open the room
     # Done server-side so that we could, for example, make people
     # join rooms automatically.
+    print('DDDDDDD')
+    print(room.users.exclude(pk=message.user.pk).values())
+    print('DDDDDDD')
+    print(room.users.exclude(pk=message.user.pk).values('username').first())
+ 
     message.reply_channel.send({
         "text": json.dumps({
             "join": str(room.id),
-            "title": room.title,
+            "title": room.users.exclude(pk=message.user.pk).values('username').first()['username'],
         }),
     })
 
