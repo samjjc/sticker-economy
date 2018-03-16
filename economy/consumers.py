@@ -1,5 +1,5 @@
 from channels.auth import channel_session_user_from_http, channel_session_user
-from .models import Room
+from .models import Room,Message
 import json
 from channels import Channel
 from .utils import catch_client_error, get_room_or_error
@@ -14,7 +14,7 @@ from .exceptions import ClientError
 def ws_connect(message):
     message.reply_channel.send({"accept": True})
     message.channel_session['rooms'] = []
-
+    message.user.room_set.all()
 
 @channel_session_user
 def ws_disconnect(message):
@@ -56,8 +56,8 @@ def chat_join(message):
     room = get_room_or_error(message["room"], message.user)
 
     # Send a "enter message" to the room if available
-    if settings.NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-        room.send_message(None, message.user, settings.MSG_TYPE_ENTER)
+    # if settings.NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
+    #     room.send_message(None, message.user, settings.MSG_TYPE_ENTER)
 
     # OK, add them in. The websocket_group is what we'll send messages
     # to so that everyone in the chat room gets them.
@@ -66,11 +66,13 @@ def chat_join(message):
     # Send a message back that will prompt them to open the room
     # Done server-side so that we could, for example, make people
     # join rooms automatically.
+    messages = list(room.message_set.order_by('created_date').values('message', 'sender__username'))
  
     message.reply_channel.send({
         "text": json.dumps({
             "join": str(room.id),
             "title": room.users.exclude(pk=message.user.pk).values('username').first()['username'],
+            "messages":messages,
         }),
     })
 
@@ -81,8 +83,8 @@ def chat_leave(message):
     room = get_room_or_error(message["room"], message.user)
 
     # Send a "leave message" to the room if available
-    if settings.NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-        room.send_message(None, message.user, settings.MSG_TYPE_LEAVE)
+    # if settings.NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
+    #     room.send_message(None, message.user, settings.MSG_TYPE_LEAVE)
 
     room.websocket_group.discard(message.reply_channel)
     message.channel_session['rooms'] = list(set(message.channel_session['rooms']).difference([room.id]))
@@ -99,4 +101,5 @@ def chat_send(message):
     if int(message['room']) not in message.channel_session['rooms']:
         raise ClientError("ROOM_ACCESS_DENIED")
     room = get_room_or_error(message["room"], message.user)
+    Message.objects.create(message=message["message"], room=room, sender=message.user)
     room.send_message(message["message"], message.user)

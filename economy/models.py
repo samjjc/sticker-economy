@@ -26,6 +26,10 @@ class Profile(models.Model):
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
 
+
+    def __unicode__(self):
+        return self.user.username
+
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -67,6 +71,10 @@ class Room(models.Model):
             {"text": json.dumps(final_msg)}
         )
 
-    @property
-    def get_title(self, user):
-        return self.users.exclude(pk=user.pk).values('first_name')
+class Message(models.Model):
+    created_date = models.DateTimeField(default=timezone.now)
+    message = models.TextField(max_length=500)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.message

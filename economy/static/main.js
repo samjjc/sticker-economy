@@ -25,10 +25,19 @@ $(function () {
         // Handle joining
         if (data.join) {
             console.log("Joining room " + data.join);
+
+            ok_msg=''
+            data.messages.forEach( message => {
+                ok_msg += "<div class='message'>" +
+                "<span class='username'>" + message.sender__username + "</span>" +
+                "<span class='body'>" + message.message + "</span>" +
+                "</div>";
+            });
+
             var roomdiv = $(
                 "<div class='room' id='room-" + data.join + "'>" +
                 "<h2>" + data.title + "</h2>" +
-                "<div class='messages'></div>" +
+                "<div class='messages'> "+ok_msg+"</div>" +
                 "<input><button>Send</button>" +
                 "</div>"
             );
@@ -40,48 +49,21 @@ $(function () {
                 }));
                 roomdiv.find("input").val("");
             });
-            $("#chats").append(roomdiv);
+            $("#chats").html(roomdiv);
+
             // Handle leaving
         } else if (data.leave) {
             console.log("Leaving room " + data.leave);
             $("#room-" + data.leave).remove();
         } else if (data.message || data.msg_type != 0) {
             var msgdiv = $("#room-" + data.room + " .messages");
-            var ok_msg = "";
             // msg types are defined in chat/settings.py
             // Only for demo purposes is hardcoded, in production scenarios, consider call a service.
-            switch (data.msg_type) {
-                case 0:
-                    // Message
-                    ok_msg = "<div class='message'>" +
-                        "<span class='username'>" + data.username + "</span>" +
-                        "<span class='body'>" + data.message + "</span>" +
-                        "</div>";
-                    break;
-                case 1:
-                    // Warning/Advice messages
-                    ok_msg = "<div class='contextual-message text-warning'>" + data.message + "</div>";
-                    break;
-                case 2:
-                    // Alert/Danger messages
-                    ok_msg = "<div class='contextual-message text-danger'>" + data.message + "</div>";
-                    break;
-                case 3:
-                    // "Muted" messages
-                    ok_msg = "<div class='contextual-message text-muted'>" + data.message + "</div>";
-                    break;
-                case 4:
-                    // User joined room
-                    ok_msg = "<div class='contextual-message text-muted'>" + data.username + " joined the room!" + "</div>";
-                    break;
-                case 5:
-                    // User left room
-                    ok_msg = "<div class='contextual-message text-muted'>" + data.username + " left the room!" + "</div>";
-                    break;
-                default:
-                    console.log("Unsupported message type!");
-                    return;
-            }
+                // Message
+            ok_msg = "<div class='message'>" +
+                "<span class='username'>" + data.username + "</span>" +
+                "<span class='body'>" + data.message + "</span>" +
+                "</div>";
             msgdiv.append(ok_msg);
             msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
         } else {
@@ -97,20 +79,11 @@ $(function () {
     // Room join/leave
     $("li.room-link").click(function () {
         roomId = $(this).attr("data-room-id");
-        if (inRoom(roomId)) {
-            // Leave room
-            $(this).removeClass("joined");
-            socket.send(JSON.stringify({
-                "command": "leave",  // determines which handler will be used (see chat/routing.py)
-                "room": roomId
-            }));
-        } else {
-            // Join room
-            $(this).addClass("joined");
-            socket.send(JSON.stringify({
-                "command": "join",
-                "room": roomId
-            }));
-        }
+        // Join room
+        $(this).addClass("joined");
+        socket.send(JSON.stringify({
+            "command": "join",
+            "room": roomId
+        }));
     });
 });
