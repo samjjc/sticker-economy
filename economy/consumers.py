@@ -62,14 +62,10 @@ def chat_join(message):
     # OK, add them in. The websocket_group is what we'll send messages
     # to so that everyone in the chat room gets them.
     room.websocket_group.add(message.reply_channel)
-    message.channel_session['rooms'] = set(message.channel_session['rooms']).union([room.id])
+    message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([room.id]))
     # Send a message back that will prompt them to open the room
     # Done server-side so that we could, for example, make people
     # join rooms automatically.
-    print('DDDDDDD')
-    print(room.users.exclude(pk=message.user.pk).values())
-    print('DDDDDDD')
-    print(room.users.exclude(pk=message.user.pk).values('username').first())
  
     message.reply_channel.send({
         "text": json.dumps({
