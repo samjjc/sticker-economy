@@ -8,6 +8,14 @@ $(function () {
     // Helpful debugging
     socket.onopen = function () {
         console.log("Connected to chat socket");
+        $("li.room-link").removeClass("joined");
+        roomId = $("li.room-link").attr("data-room-id");
+        // Join room
+        $("li.room-link").first().addClass("joined");
+        socket.send(JSON.stringify({
+            "command": "join",
+            "room": roomId
+        }));
     };
     socket.onclose = function () {
         console.log("Disconnected from chat socket");
@@ -34,29 +42,24 @@ $(function () {
                 "</div>";
             });
 
-            var roomdiv = $(
-                "<div class='room' id='room-" + data.join + "'>" +
-                "<h2>" + data.title + "</h2>" +
-                "<div class='messages'> "+ok_msg+"</div>" +
-                "<input><button>Send</button>" +
-                "</div>"
-            );
-            roomdiv.find("button").on("click", function () {
-                socket.send(JSON.stringify({
-                    "command": "send",
-                    "room": data.join,
-                    "message": roomdiv.find("input").val()
-                }));
-                roomdiv.find("input").val("");
-            });
-            $("#chats").html(roomdiv);
+            // var roomdiv = $(
+            //     "<div class='room' id='room-" + data.join + "'>" +
+            //     "<h2>" + data.title + "</h2>" +
+            //     "<div class='messages'> "+ok_msg+"</div>" +
+            //     "<input><button>Send</button>" +
+            //     "</div>"
+            // );
+            $(".room").attr("data-room-id", data.join)
+
+            $(".room h2").text( data.title)
+            $(".messages").html(ok_msg)
 
             // Handle leaving
         } else if (data.leave) {
             console.log("Leaving room " + data.leave);
             $("#room-" + data.leave).remove();
         } else if (data.message || data.msg_type != 0) {
-            var msgdiv = $("#room-" + data.room + " .messages");
+            var msgdiv = $(".messages");
             // msg types are defined in chat/settings.py
             // Only for demo purposes is hardcoded, in production scenarios, consider call a service.
                 // Message
@@ -78,6 +81,7 @@ $(function () {
 
     // Room join/leave
     $("li.room-link").click(function () {
+        $("li.room-link").removeClass("joined");
         roomId = $(this).attr("data-room-id");
         // Join room
         $(this).addClass("joined");
@@ -85,5 +89,15 @@ $(function () {
             "command": "join",
             "room": roomId
         }));
+    });
+
+    $(".room button").click( function () {
+        console.log("CLICKES")
+        socket.send(JSON.stringify({
+            "command": "send",
+            "room":   $(".room").attr("data-room-id"),
+            "message": $(".room input").val()
+        }));
+        $(".room input").val("");
     });
 });

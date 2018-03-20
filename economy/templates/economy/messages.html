@@ -12,10 +12,16 @@
                     {% for room in rooms %}
                         <li class="room-link" data-room-id="{{ room.id }}">{{ room.sender }}</li>
                     {% empty %}
-                        <p class="empty">No chat rooms defined. Maybe make some in the <a href="{% url 'admin:index' %}">admin</a>?</p>
+                        <p class="empty">No chat rooms defined. Maybe make some in the <a href="{% url 'admin:index' %}">admin</a></p>
                     {% endfor %}
                 </ul>
                 <div id="chats">
+                    <div class='room'>
+                        <h2> </h2>
+                        <div class='messages'> </div>
+                        <input><button>Send</button>
+                    </div>
+                </div>
         </div>
     </div>
 {% endblock %}
