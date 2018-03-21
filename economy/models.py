@@ -33,12 +33,16 @@ def update_user_profile(sender, instance, created, **kwargs):
     instance.profile.save()
 
 class TradeRequest(models.Model):
+    users = models.ManyToManyField(User)
     requested_sticker = models.ForeignKey(Sticker, on_delete=models.CASCADE, related_name='requested')
     requested_quantity = models.IntegerField(default = 1)
     given_sticker = models.ForeignKey(Sticker, on_delete=models.CASCADE, related_name='given')
     given_quantity = models.IntegerField(default = 1)
     message = models.TextField(default="Hey, I want to make a trade.")
     accepted = models.BooleanField(default=False)
+    given_completed = models.BooleanField(default=False)
+    requested_completed = models.BooleanField(default=False)
+    
 
 
 class Room(models.Model):
@@ -46,6 +50,7 @@ class Room(models.Model):
     A room for people to chat in.
     """
     users = models.ManyToManyField(User)
+    active = models.BooleanField(default=False)
 
 
     @property

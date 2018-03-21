@@ -13,7 +13,6 @@ urlpatterns = [
     path(r'profile/<int:pk>', views.profile_view, name='profile'),
     path(r'sticker/<int:pk>/trade/', views.sticker_trade, name='sticker_trade'),
     path(r'sticker/<int:pk>/trades/', views.trade_requests, name='trade_requests'),
-    path(r'trade/<int:pk>/', views.trade, name='trade'),
     path(r'trade/<int:pk>/accept/', views.accept_trade, name='accept_trade'),    
     path(r'messages/', views.messages, name='messages'),
 ]

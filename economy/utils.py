@@ -13,7 +13,6 @@ def catch_client_error(func):
         try:
             return func(message, *args, **kwargs)
         except ClientError as e:
-            print("ERROROROROROROROR")
             print(e)
             # If we catch a client error, tell it to send an error string
             # back to the client on their reply channel
@@ -35,3 +34,16 @@ def get_room_or_error(room_id, user):
         raise ClientError("ROOM_INVALID")
     # Check permissions
     return room
+
+def give_stickers(sticker, quantity):
+    if sticker.quantity == quantity:
+        sticker.delete()
+    else:
+        sticker.quantity -= quantity
+        sticker.save()
+
+
+def trade_stickers(trade):
+    give_stickers(trade.given_sticker, trade.given_quantity)
+    give_stickers(trade.requested_sticker, trade.requested_quantity)
+    trade.delete()

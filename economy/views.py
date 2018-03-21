@@ -89,6 +89,8 @@ def sticker_trade(request, pk):
             trade = form.save(commit=False)
             trade.requested_sticker = sticker
             trade.save()
+            trade.users.add(request.user)
+            trade.users.add(sticker.owner)
             return redirect('sticker_list')
     else:
         form = TradeRequestForm(user=request.user, sticker=sticker)
@@ -99,37 +101,20 @@ def accept_trade(request, pk):
     trade.accepted = True
     trade.save()
 
-    room = Room.objects.create(title="-_-")
+    room = Room.objects.create(active=True)
     room.save()
     room.users.add(trade.given_sticker.owner)
     room.users.add(trade.requested_sticker.owner)
-    room.save()
-
     return redirect('messages')
 
 def trade_requests(request, pk):
     sticker = get_object_or_404(Sticker, pk=pk)
-    requests = sticker.requested.all()
+    requests = sticker.requested.filter(accepted=False)
     return render(request, 'economy/trade_requests.html', {'requests': requests})
-
-def trade(request, pk):
-    trade = get_object_or_404(TradeRequest, pk=pk)
-
-    give_stickers(trade.given_sticker, trade.given_quantity)
-    give_stickers(trade.requested_sticker, trade.requested_quantity)
-    return redirect('sticker_list')
 
 def messages(request):
     current_user = request.user
-    rooms = current_user.room_set.all()
+    rooms = current_user.room_set.filter(active=True)
     for room in rooms:
         room.sender=room.users.exclude(pk=request.user.pk).values('username').first()['username']
     return render(request, 'economy/messages.html', {'rooms': rooms})
-
-
-
-def give_stickers(sticker, quantity):
-    if sticker.quantity == quantity:
-        sticker.delete()
-    else:
-        sticker.quantity -= quantity

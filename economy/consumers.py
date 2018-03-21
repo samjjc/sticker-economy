@@ -1,8 +1,9 @@
 from channels.auth import channel_session_user_from_http, channel_session_user
-from .models import Room,Message
+from django.shortcuts import get_object_or_404
+from .models import Room,Message, TradeRequest
 import json
 from channels import Channel
-from .utils import catch_client_error, get_room_or_error
+from .utils import catch_client_error, get_room_or_error, trade_stickers
 from django.conf import settings
 from .exceptions import ClientError
 
@@ -57,7 +58,7 @@ def chat_join(message):
 
     # Send a "enter message" to the room if available
     # if settings.NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-    #     room.send_message(None, message.user, settings.MSG_TYPE_ENTER)
+    # room.send_message(None, message.user, settings.MSG_TYPE_ENTER)
 
     # OK, add them in. The websocket_group is what we'll send messages
     # to so that everyone in the chat room gets them.
@@ -67,12 +68,16 @@ def chat_join(message):
     # Done server-side so that we could, for example, make people
     # join rooms automatically.
     messages = list(room.message_set.order_by('created_date').values('message', 'sender__username'))
- 
+
+    trade_requests = list(message.user.traderequest_set.filter(accepted=True).values('pk','requested_sticker__title','given_sticker__title','requested_sticker__image','requested_sticker__quantity','given_sticker__image', 'given_sticker__quantity','requested_quantity','given_quantity','given_completed','requested_completed', 'given_sticker__owner'))
+
     message.reply_channel.send({
         "text": json.dumps({
             "join": str(room.id),
             "title": room.users.exclude(pk=message.user.pk).values('username').first()['username'],
             "messages":messages,
+            "client": message.user.pk,
+            "trade_requests": trade_requests,
         }),
     })
 
@@ -103,3 +108,56 @@ def chat_send(message):
     room = get_room_or_error(message["room"], message.user)
     Message.objects.create(message=message["message"], room=room, sender=message.user)
     room.send_message(message["message"], message.user)
+
+@channel_session_user
+def trade_confirm(message):
+    trade = get_object_or_404(TradeRequest, pk=int(message['trade']))
+    room = get_room_or_error(message["room"], message.user)
+
+    if message.user == trade.given_sticker.owner and trade.requested_completed == True or message.user == trade.requested_sticker.owner and trade.given_completed == True:
+        pk = trade.pk
+        trade_stickers(trade)
+        room.active = False
+        room.save()
+        room.websocket_group.send({
+            "text": json.dumps({
+                "traded": pk,
+            }),
+        })
+    elif message.user == trade.given_sticker.owner:
+        trade.given_completed = True
+        trade.save()
+        room.websocket_group.send({
+            "text": json.dumps({
+                "traded": trade.pk,
+                "user": message.user.pk,
+                "username": message.user.username,
+            }),
+        })
+    elif message.user == trade.requested_sticker.owner:
+        trade.requested_completed = True
+        trade.save()
+        room.websocket_group.send({
+            "text": json.dumps({
+                "traded": trade.pk,
+                "user": message.user.pk,
+                "username": message.user.username,
+            }),
+        })
+    else:
+        print("Error")   
+
+@channel_session_user
+def trade_modify(message):
+    trade = get_object_or_404(TradeRequest, pk=int(message['trade']))
+    room = get_room_or_error(message["room"], message.user)
+    trade.requested_quantity = message['requested_quantity']
+    trade.given_quantity = message['given_quantity']
+    trade.given_completed = False
+    trade.requested_completed = False
+    trade.save()
+    room.websocket_group.send({
+        "text": json.dumps({
+            "modified": trade.pk,
+        }),
+    })

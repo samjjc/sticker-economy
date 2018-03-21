@@ -8,12 +8,9 @@
 {% block content %}
     <div class="jumbotron row">
         <div class = "col-md-6">
-                <ul class = "rooms">
-                    {% for room in rooms %}
-                        <li class="room-link" data-room-id="{{ room.id }}">{{ room.sender }}</li>
-                    {% empty %}
-                        <p class="empty">No chat rooms defined. Maybe make some in the <a href="{% url 'admin:index' %}">admin</a></p>
-                    {% endfor %}
+            <ul class = "rooms">
+                {% for room in rooms %}
+                    <li class="room-link" data-room-id="{{ room.id }}">{{ room.sender }}</li>
                 </ul>
                 <div id="chats">
                     <div class='room'>
@@ -22,6 +19,11 @@
                         <input><button>Send</button>
                     </div>
                 </div>
+                {% empty %}
+                <p class="empty">No accepted trades</p>
+            {% endfor %}
+        </div>
+        <div class = "col-md-6" id="trades">
         </div>
     </div>
 {% endblock %}
