@@ -8,6 +8,12 @@ from django.conf import settings
 from .exceptions import ClientError
 
 
+MODIFIED_MESSAGE = "A trade has been Modified"
+DECLINED_MESSAGE = "A trade has been Declined"
+CONFIRMED_MESSAGE = "A trade has been Confirmed"
+COMPELTED_MESSAGE = "A trade has been Completed"
+
+
 # This decorator copies the user from the HTTP session (only available in
 # websocket.connect or http.request messages) to the channel session (available
 # in all consumers with the same reply_channel, so all three here)
@@ -67,14 +73,15 @@ def chat_join(message):
     # Send a message back that will prompt them to open the room
     # Done server-side so that we could, for example, make people
     # join rooms automatically.
-    messages = list(room.message_set.order_by('created_date').values('message', 'sender__username'))
-
-    trade_requests = list(message.user.traderequest_set.filter(accepted=True).values('pk','requested_sticker__title','given_sticker__title','requested_sticker__image','requested_sticker__quantity','given_sticker__image', 'given_sticker__quantity','requested_quantity','given_quantity','given_completed','requested_completed', 'given_sticker__owner'))
+    messages = list(room.message_set.order_by('created_date').values('message', 'sender__username','msg_type'))
+    other_user=room.users.exclude(pk=message.user.pk).get()
+    # print(other_user.traderequest_set.filter(users=other_user))
+    trade_requests = list(TradeRequest.objects.filter(accepted=True, users=other_user.pk).filter(users=message.user.pk).values('pk','requested_sticker__title','given_sticker__title','requested_sticker__image','requested_sticker__quantity','given_sticker__image', 'given_sticker__quantity','requested_quantity','given_quantity','given_completed','requested_completed', 'given_sticker__owner'))
 
     message.reply_channel.send({
         "text": json.dumps({
             "join": str(room.id),
-            "title": room.users.exclude(pk=message.user.pk).values('username').first()['username'],
+            "title": other_user.username,
             "messages":messages,
             "client": message.user.pk,
             "trade_requests": trade_requests,
@@ -106,8 +113,8 @@ def chat_send(message):
     if int(message['room']) not in message.channel_session['rooms']:
         raise ClientError("ROOM_ACCESS_DENIED")
     room = get_room_or_error(message["room"], message.user)
-    Message.objects.create(message=message["message"], room=room, sender=message.user)
-    room.send_message(message["message"], message.user)
+    msg = Message.objects.create(message=message["message"], room=room, sender=message.user)
+    room.send_message(msg)
 
 @channel_session_user
 def trade_confirm(message):
@@ -124,6 +131,8 @@ def trade_confirm(message):
                 "traded": pk,
             }),
         })
+        msg = Message.objects.create(message=COMPELTED_MESSAGE, room=room, sender=message.user, msg_type=2)
+        room.send_message(msg)
     elif message.user == trade.given_sticker.owner:
         trade.given_completed = True
         trade.save()
@@ -134,6 +143,8 @@ def trade_confirm(message):
                 "username": message.user.username,
             }),
         })
+        msg = Message.objects.create(message=CONFIRMED_MESSAGE, room=room, sender=message.user, msg_type=2)
+        room.send_message(msg)
     elif message.user == trade.requested_sticker.owner:
         trade.requested_completed = True
         trade.save()
@@ -144,6 +155,8 @@ def trade_confirm(message):
                 "username": message.user.username,
             }),
         })
+        msg = Message.objects.create(message=CONFIRMED_MESSAGE, room=room, sender=message.user, msg_type=2)
+        room.send_message(msg)
     else:
         print("Error")   
 
@@ -159,5 +172,27 @@ def trade_modify(message):
     room.websocket_group.send({
         "text": json.dumps({
             "modified": trade.pk,
+            "requested_quantity": trade.requested_quantity,
+            "given_quantity": trade.given_quantity,
         }),
     })
+
+    msg = Message.objects.create(message=MODIFIED_MESSAGE, room=room, sender=message.user, msg_type=2)
+    room.send_message(msg)
+
+
+@channel_session_user
+def trade_delete(message):
+    trade = get_object_or_404(TradeRequest, pk=int(message['trade']))
+    room = get_room_or_error(message["room"], message.user)
+    pk = trade.pk
+    trade.delete()
+    room.websocket_group.send({
+        "text": json.dumps({
+            "delete": pk,
+        }),
+    })
+    room.active = False
+
+    msg = Message.objects.create(message=DECLINED_MESSAGE, room=room, sender=message.user, msg_type=2)
+    room.send_message(msg)

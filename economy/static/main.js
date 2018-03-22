@@ -38,33 +38,33 @@ $(function () {
 
             ok_msg=''
             data.messages.forEach( message => {
-                ok_msg += "<div class='message'>" +
-                "<span class='username'>" + message.sender__username + "</span>" +
-                "<span class='body'>" + message.message + "</span>" +
-                "</div>";
+                ok_msg+=getMessageHTML(message)
             });
 
             $(".room").attr("data-room-id", data.join)
 
             $(".room h2").text( data.title)
             $(".messages").html(ok_msg)
+            
             trade_view=''
             data.trade_requests.forEach( trade => {
                 trade_view+="<div id='"+trade.pk+"' class='trade'>"+
                 "<h2>Request a Trade for "+trade.requested_sticker__title+"</h2>"+
-                " <img src="+ document.location.origin+"/media/"+trade.requested_sticker__image +" alt='Sticker image' height='200'></img>"+
+                " <img src="+ document.location.origin+"/media/"+trade.requested_sticker__image +" alt='Sticker image' width='200'></img>"+
                 "<input class='requested_quantity' type='number' min = 0, max="+trade.requested_sticker__quantity+" value = "+trade.requested_quantity+">"+
-                "<img src="+ document.location.origin+"/media/"+trade.given_sticker__image +" alt='Sticker image' height='200'></img>"+
+                "<img src="+ document.location.origin+"/media/"+trade.given_sticker__image +" alt='Sticker image' width='200'></img>"+
                 "<input class='given_quantity' type='number' min = 0, max="+trade.requested_sticker__quantity +" value = "+trade.given_quantity+">"+
                 "<button class='modify'>Modify Trade</button>"
                 // if not accepted, add an accept button
                 if(!(user == trade.given_sticker__owner && trade.given_completed || user != trade.given_sticker__owner &&trade.requested_completed)){
                     trade_view+="<button class='accept'>Accept</button>"
                 }
-                trade_view+="</div>"
+                trade_view+="<button class='delete'>Decline Trade</button></div>"
             })
             $("#trades").html(trade_view)
+            $(".messages").scrollTop(msgdiv.prop("scrollHeight"));
 
+            //button on click functions
             $(".modify").click( function () {
                 trade_pk =  $(this).parent().attr('id')
                 socket.send(JSON.stringify({
@@ -72,13 +72,21 @@ $(function () {
                     "room":   $(".room").attr("data-room-id"),
                     "trade": trade_pk,
                     "requested_quantity":$("#"+trade_pk+" .requested_quantity").val(),
-                    "given_quantity":$("#"+trade_pk+" .requested_quantity").val(),
+                    "given_quantity":$("#"+trade_pk+" .given_quantity").val(),
                 }));
             })
 
             $(".accept").click( function () {
                 socket.send(JSON.stringify({
                     "command": "confirm",
+                    "room":   $(".room").attr("data-room-id"),
+                    "trade": $(this).parent().attr('id'),
+                }));
+            })
+
+            $(".delete").click( function () {
+                socket.send(JSON.stringify({
+                    "command": "delete",
                     "room":   $(".room").attr("data-room-id"),
                     "trade": $(this).parent().attr('id'),
                 }));
@@ -110,17 +118,14 @@ $(function () {
                 $('#'+data.traded).remove()
             }
 
-            $(".messages").append(ok_msg)
-            $(".messages").scrollTop($(".messages").prop("scrollHeight"))
-
-
-
         } else if(data.modified){
-            ok_msg = "<div class='contextual-message text-muted'> A trade has been modified</div>"
-            $(".messages").append(ok_msg)
-            $(".messages").scrollTop($(".messages").prop("scrollHeight"))
+            $('#'+data.modified+" .requested_quantity").val(data.requested_quantity)
+            $('#'+data.modified+" .given_quantity").val(data.given_quantity)
 
-        }else if (data.message || data.msg_type != 0) {
+        } else if(data.delete){
+            $('#'+data.delete).remove()
+
+        } else if (data.message) {
             var msgdiv = $(".messages");
             // msg types are defined in chat/settings.py
             // Only for demo purposes is hardcoded, in production scenarios, consider call a service.
@@ -129,6 +134,7 @@ $(function () {
                 "<span class='username'>" + data.username + "</span>" +
                 "<span class='body'>" + data.message + "</span>" +
                 "</div>";
+            ok_msg = getMessageHTML(data)
             msgdiv.append(ok_msg);
             msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
         } else {
@@ -161,4 +167,22 @@ $(function () {
         }));
         $(".room input").val("");
     });
+
+   function getMessageHTML(message) {
+        ok_msg=''
+        switch(message.msg_type) {
+            case 1:
+                ok_msg = "<div class='message'>" +
+                "<span class='username'>" + message.sender__username+"</span>" +
+                "<span class='body'>" + message.message + "</span>" +
+                "</div>";
+                break;
+            case 2:
+                ok_msg = "<div class='contextual-message text-muted'>"+message.message+"</div>"
+                break;
+            default:
+                console.log("error on message: " + message)
+        }
+        return ok_msg
+    }
 });

@@ -79,7 +79,8 @@ def logout_view(request):
 def profile_view(request, pk):
     user = get_object_or_404(User, pk=pk)
     stickers = Sticker.objects.filter(owner=user)
-    return render(request, 'economy/profile.html', {'stickers': stickers, 'user': user})
+    requests = user.traderequest_set.filter(accepted=False)
+    return render(request, 'economy/profile.html', {'stickers': stickers, 'user': user, 'requests': requests})
 
 def sticker_trade(request, pk):
     sticker = get_object_or_404(Sticker, pk=pk)
@@ -89,8 +90,8 @@ def sticker_trade(request, pk):
             trade = form.save(commit=False)
             trade.requested_sticker = sticker
             trade.save()
-            trade.users.add(request.user)
-            trade.users.add(sticker.owner)
+            trade.users.add(request.user,sticker.owner)
+            print(request.user.traderequest_set.values('users'))
             return redirect('sticker_list')
     else:
         form = TradeRequestForm(user=request.user, sticker=sticker)
@@ -101,10 +102,16 @@ def accept_trade(request, pk):
     trade.accepted = True
     trade.save()
 
-    room = Room.objects.create(active=True)
-    room.save()
-    room.users.add(trade.given_sticker.owner)
-    room.users.add(trade.requested_sticker.owner)
+    room = Room.objects.filter(users__pk=trade.given_sticker.owner.pk).filter(users__pk=trade.requested_sticker.owner.pk)
+    if room.exists():
+        room = room.get()
+        room.active = True
+        room.save()
+    else:
+        room = Room.objects.create(active=True)
+        room.save()
+        room.users.add(trade.given_sticker.owner)
+        room.users.add(trade.requested_sticker.owner)
     return redirect('messages')
 
 def trade_requests(request, pk):
@@ -116,5 +123,5 @@ def messages(request):
     current_user = request.user
     rooms = current_user.room_set.filter(active=True)
     for room in rooms:
-        room.sender=room.users.exclude(pk=request.user.pk).values('username').first()['username']
+        room.sender=room.users.exclude(pk=request.user.pk).values('username').get()['username']
     return render(request, 'economy/messages.html', {'rooms': rooms})

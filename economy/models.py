@@ -61,11 +61,11 @@ class Room(models.Model):
         """
         return Group("room-%s" % self.id)
 
-    def send_message(self, message, user, msg_type=settings.MSG_TYPE_MESSAGE):
+    def send_message(self, message):
         """
         Called to send a message to the room on behalf of a user.
         """
-        final_msg = {'room': str(self.id), 'message': message, 'username': user.username, 'msg_type': msg_type}
+        final_msg = {'room': str(self.id), 'message': message.message, 'sender__username': message.sender.username, 'msg_type': message.msg_type}
 
         # Send out the message to everyone in the room
         self.websocket_group.send(
@@ -77,5 +77,6 @@ class Message(models.Model):
     message = models.TextField(max_length=500)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    msg_type = models.IntegerField(default = 1)
     def __str__(self):
         return self.message

@@ -6,7 +6,7 @@
             {{ user.first_name}}  {{user.last_name}}
         </div>
 </div>
-
+<div class = "col-md-6">
     {% for sticker in stickers %}
             <div class="jumbotron row">
                 <div class = "col-md-6">
@@ -21,4 +21,22 @@
                 </div>
             </div>
     {% endfor %}
+</div>
+<div class = "col-md-6">
+    {% for request in requests %}
+    <div class="jumbotron row">
+            <div class = "col-md-6">
+                    <img src="{{ request.requested_sticker.image.url }}" alt="Sticker image" height="100"></img>
+                    <p>{{request.requested_quantity}}</p>
+                    <img src="{{ request.requested_sticker.image.url }}" alt="Sticker image" height="100"></img>
+                    <p>{{request.given_quantity}}</p>
+                    <p>{{request.message}}</p>
+                    {% if user ==  request.requested_sticker.owner%}
+                    <p><a href="{% url 'accept_trade' pk=request.pk %}">Accept Trade</a></p>
+                    {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
 {% endblock %}

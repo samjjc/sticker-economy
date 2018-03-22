@@ -1,5 +1,5 @@
 from channels import route
-from .consumers import ws_connect, ws_receive, ws_disconnect, chat_join, chat_leave, chat_send, trade_confirm, trade_modify
+from .consumers import ws_connect, ws_receive, ws_disconnect, chat_join, chat_leave, chat_send, trade_confirm, trade_modify, trade_delete
 
 
 # There's no path matching on these routes; we just rely on the matching
@@ -26,4 +26,5 @@ custom_routing = [
     route("chat.receive", chat_send, command="send"),
     route("chat.receive", trade_confirm, command="confirm"),
     route("chat.receive", trade_modify, command="modify"),
+    route("chat.receive", trade_delete, command="delete"),
 ]

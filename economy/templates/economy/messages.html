@@ -11,7 +11,12 @@
             <ul class = "rooms">
                 {% for room in rooms %}
                     <li class="room-link" data-room-id="{{ room.id }}">{{ room.sender }}</li>
-                </ul>
+                
+                {% empty %}
+                <p class="empty">No accepted trades</p>
+            {% endfor %}
+            </ul>
+            {% if rooms%}
                 <div id="chats">
                     <div class='room'>
                         <h2> </h2>
@@ -19,11 +24,9 @@
                         <input><button>Send</button>
                     </div>
                 </div>
-                {% empty %}
-                <p class="empty">No accepted trades</p>
-            {% endfor %}
+            {% endif %}
         </div>
-        <div class = "col-md-6" id="trades">
+        <div class = "col-md-4" id="trades">
         </div>
     </div>
 {% endblock %}

@@ -16,6 +16,7 @@
                 <h2><a href="{% url 'profile' pk=user.pk %}" class="top-menu">Profile</a></h2>
                 <h2><a href="/logout/" class="top-menu">Log out</a></h2>
                 <h2><a href="/messages/" class="top-menu">Messages</a></h2>
+                <h2 class="page-header">{{request.user.username}}</h2>
                 {% else %}
                 <h2><a href="/signup/" class="top-menu">Sign up</a></h2>
                 <h2><a href="/login/" class="top-menu">Log in</a></h2>
@@ -34,7 +35,7 @@
                     </ul>
                 {% endif %}
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                     {% block content %}
                     {% endblock %}
                     </div>
