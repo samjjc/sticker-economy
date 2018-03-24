@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import django_heroku
 from django.conf import settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -143,4 +142,4 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "stickerEconomy")
 MEDIA_URL='/media/'
 
 # Activate Django-Heroku.
-django_heroku.settings(locals())
+# django_heroku.settings(locals())

@@ -1,6 +1,6 @@
 # [START django_app]
 runtime: python27
-api_version: 1.0.1
+api_version: 1
 threadsafe: yes
 
 handlers:
@@ -16,6 +16,8 @@ handlers:
 libraries:
 - name: MySQLdb
   version: 1.2.5
+# - name: django
+#   version: 1.11
 # [END django_app]
 
 # Google App Engine limits application deployments to 10,000 uploaded files per
@@ -29,3 +31,5 @@ skip_files:
 - ^(.*/)?.*/RCS/.*$
 - ^(.*/)?\..*$
 - ^env/.*$
+- ^.git$
+- ^myvenv$
