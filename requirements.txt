@@ -12,4 +12,3 @@ websocket-client
 rope
 django-storages
 google-cloud-storage
-chat
