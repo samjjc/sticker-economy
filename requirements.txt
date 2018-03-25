@@ -1,0 +1,14 @@
+django
+gunicorn
+django-heroku
+psycopg2
+pip
+psycopg2-binary
+pillow
+daphne
+channels==1.1.5
+asgi-redis
+websocket-client
+rope
+django-storages
+google-cloud-storage
