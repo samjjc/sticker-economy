@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'economy',
     'channels',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +88,10 @@ WSGI_APPLICATION = 'stickerEconomy.wsgi.application'
 # except ImportError:
 #     import pymysql
 #     pymysql.install_as_MySQLdb()
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+
+GS_BUCKET_NAME = 'sticker-economy'
 
 if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
     DATABASES = {
@@ -160,7 +165,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "stickerEconomy")
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR))
 
 MEDIA_URL='/media/'
 

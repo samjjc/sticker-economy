@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d0a90c2835869781c5e44af5bfd98261975010803573014ddb7b9ef0be1f050f"
+            "sha256": "d70c1dcc0cac2a49290da7d3ac9f53e12e3aeded6045b3fbcac4a1e394cd9692"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -47,10 +47,6 @@
             "hashes": [],
             "version": "==0.6.0"
         },
-        "beautifulsoup4": {
-            "hashes": [],
-            "version": "==4.6.0"
-        },
         "channels": {
             "hashes": [],
             "version": "==1.1.5"
@@ -75,9 +71,9 @@
             "hashes": [],
             "version": "==0.3.1"
         },
-        "google": {
+        "django-storages": {
             "hashes": [],
-            "version": "==2.0.1"
+            "version": "==1.6.5"
         },
         "gunicorn": {
             "hashes": [],

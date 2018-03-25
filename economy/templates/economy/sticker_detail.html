@@ -14,7 +14,7 @@
                 <a class="btn btn-default right" href="{% url 'sticker_delete' pk=sticker.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
                 <a class="btn btn-default right" href="{% url 'sticker_edit' pk=sticker.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
             {% endif %}
-            <img src="{{ sticker.image.url }}" alt="Sticker image" height="200"></img>
+            <img src="{{ sticker.image.url }}" alt="Sticker image {{ sticker.image.url }}" height="200"></img>
             {% if user.is_authenticated and user != sticker.owner%}
             <p><a href="{% url 'sticker_trade' pk=sticker.pk %}">Request Trade</a></p>
             {% endif %}
