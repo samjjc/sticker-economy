@@ -50,9 +50,9 @@ $(function () {
             data.trade_requests.forEach( trade => {
                 trade_view+="<div id='"+trade.pk+"' class='trade'>"+
                 "<h2>Request a Trade for "+trade.requested_sticker__title+"</h2>"+
-                " <img src="+ document.location.origin+"/media/"+trade.requested_sticker__image +" alt='Sticker image' width='200'></img>"+
+                " <img src=https://storage.googleapis.com/sticker-economy/"+trade.requested_sticker__image +" alt='Sticker image' width='200'></img>"+
                 "<input class='requested_quantity' type='number' min = 0, max="+trade.requested_sticker__quantity+" value = "+trade.requested_quantity+">"+
-                "<img src="+ document.location.origin+"/media/"+trade.given_sticker__image +" alt='Sticker image' width='200'></img>"+
+                "<img src='https://storage.googleapis.com/sticker-economy/"+trade.given_sticker__image +"' alt='Sticker image' width='200'></img>"+
                 "<input class='given_quantity' type='number' min = 0, max="+trade.requested_sticker__quantity +" value = "+trade.given_quantity+">"+
                 "<button class='modify'>Modify Trade</button>"
                 // if not accepted, add an accept button
@@ -62,7 +62,7 @@ $(function () {
                 trade_view+="<button class='delete'>Decline Trade</button></div>"
             })
             $("#trades").html(trade_view)
-            $(".messages").scrollTop(msgdiv.prop("scrollHeight"));
+            $(".messages").scrollTop($(".messages").prop("scrollHeight"));
 
             //button on click functions
             $(".modify").click( function () {
