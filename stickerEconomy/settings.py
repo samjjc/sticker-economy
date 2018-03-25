@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 from django.conf import settings
+import django_heroku
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -76,12 +78,33 @@ WSGI_APPLICATION = 'stickerEconomy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
+# Check to see if MySQLdb is available; if not, have pymysql masquerade as
+# MySQLdb. This is a convenience feature for developers who cannot install
+# MySQLdb locally; when running in production on Google App Engine Standard
+# Environment, MySQLdb will be used.
+# try:
+#     import MySQLdb  # noqa: F401
+# except ImportError:
+#     import pymysql
+#     pymysql.install_as_MySQLdb()
+
+if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
+    DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': '/cloudsql/<your-cloudsql-connection-string>',
+            # 'NAME': 'polls',
+            'USER': 'sammy',
+            'PASSWORD': 'stickerpass',
     }
 }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 
 # Password validation
@@ -142,4 +165,4 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "stickerEconomy")
 MEDIA_URL='/media/'
 
 # Activate Django-Heroku.
-# django_heroku.settings(locals())
+django_heroku.settings(locals())
