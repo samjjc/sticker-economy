@@ -93,16 +93,17 @@ DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
 GS_BUCKET_NAME = 'sticker-economy'
 
-if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
+if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
-    'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'HOST': '/cloudsql/<your-cloudsql-connection-string>',
-            # 'NAME': 'polls',
-            'USER': 'sammy',
-            'PASSWORD': 'stickerpass',
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
     }
-}
 else:
     DATABASES = {
         'default': {
@@ -163,10 +164,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR))
-
 MEDIA_URL='/media/'
 
 # Activate Django-Heroku.
