@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'economy',
     # 'channels',
-    # 'storages',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +80,12 @@ WSGI_APPLICATION = 'stickerEconomy.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 # DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = 'AKIAIUCS2YTHHCI6S3SQ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'sticker-economy-bucket'
 
 GS_BUCKET_NAME = 'sticker-economy'
 
@@ -156,8 +162,10 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR))
 MEDIA_URL='/media/'
 
