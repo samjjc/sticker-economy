@@ -1,0 +1,138 @@
+.page-header {
+    margin-top: 0;
+    padding: 20px 20px 20px 40px;
+}
+
+.page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
+    font-size: 36pt;
+    text-decoration: none;
+}
+
+.content {
+    margin-left: 40px;
+}
+
+/* h1, h2, h3, h4 {
+    font-family: 'Lobster';
+} */
+
+.date {
+    color: #828282;
+}
+
+.save {
+    float: right;
+}
+
+.sticker-form textarea, .post-form input {
+    width: 100%;
+}
+
+.top-menu, .top-menu:hover, .top-menu:visited {
+    float: right;
+    margin-right: 20px;
+}
+
+.top-menu-image, .top-menu-image:hover, .top-menu-image:visited {
+    float: right;
+    font-size: 20pt;
+    margin-right: 20px;
+}
+
+.sticker {
+    margin-bottom: 70px;
+}
+
+.right{
+    float: right;
+}
+
+.sticker h1 a, .post h1 a:visited {
+    color: #000000;
+}
+
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+section {
+    width: 800px;
+    margin: 0 auto;
+}
+
+p {
+    margin: 1em 0 2em 0;
+}
+
+.empty {
+    color: #666;
+    font-style: italic;
+}
+
+.rooms li {
+    padding: 5px 7px;
+    background: #def;
+    display: inline;
+    margin: 5px 2px;
+    border: 1px solid #bcd;
+    border-radius: 2px;
+    cursor: pointer;
+}
+    .rooms li.joined {
+        background: #5898D9;
+        border: 1px solid #35485C;
+    }
+
+#chats {
+    background: #fff;
+}
+    #chats .room {
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin: 30px 0 0 0;
+    }
+    #chats h2 {
+        color: #333;
+        margin: 2px 0 5px 0;
+        font-weight: bold;
+    }
+    #chats .messages {
+        height: 200px;
+        overflow: auto;
+        margin: 2px 0 5px 0;
+    }
+    #chats .username {
+        display: inline-block;
+        color: #C07A36;
+        width: 100px;
+        font-weight: bold;
+    }
+    #chats .contextual-message{
+        text-align: center;
+        margin: 5px 5px 5px 5px;
+    }
+    #chats .text-muted {
+        opacity: .6;
+        font-style: italic;
+    }
+    #chats .text-danger {
+        color: #a94442;
+        font-weight: bold;
+    }
+    #chats .text-warning {
+        color: #DCAD5C;
+        font-weight: bold;
+        font-style: italic;
+}
