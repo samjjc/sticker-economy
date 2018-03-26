@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'stickerEconomy.wsgi.application'
 #     import pymysql
 #     pymysql.install_as_MySQLdb()
 
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
 GS_BUCKET_NAME = 'sticker-economy'
 
