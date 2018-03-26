@@ -136,7 +136,7 @@ CHANNEL_LAYERS = {
         # This example app uses the Redis channel layer implementation asgi_redis
         "BACKEND": "asgi_redis.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(redis_host, 6379)],
+            "hosts": ["redis://(sticker-redis.ukxx6q.0001.use2.cache.amazonaws.com, 6379)"],
         },
        "ROUTING": "stickerEconomy.routing.channel_routing", # We will create it in a moment
     },
