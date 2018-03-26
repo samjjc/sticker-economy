@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'economy',
     # 'channels',
-    'storages',
+    # 'storages',
 ]
 
 MIDDLEWARE = [
