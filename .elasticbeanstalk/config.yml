@@ -1,7 +1,11 @@
 branch-defaults:
   master:
-    environment: django-env
+    environment: stickerEconomy-dev
     group_suffix: null
+environment-defaults:
+  stickerEconomy-dev:
+    branch: null
+    repository: null
 global:
   application_name: stickerEconomy
   branch: null
