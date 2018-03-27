@@ -84,8 +84,8 @@ ASGI_APPLICATION = 'stickerEconomy.asgi.application'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-AWS_ACCESS_KEY_ID = 'AKIAIUCS2YTHHCI6S3SQ'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = 'AKIAIOEKJCF7KILOJD4A'
+AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = 'sticker-economy-bucket'
 
 GS_BUCKET_NAME = 'sticker-economy'
