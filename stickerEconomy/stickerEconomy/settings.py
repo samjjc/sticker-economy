@@ -141,7 +141,7 @@ CHANNEL_LAYERS = {
             # "hosts": [os.environ.get('REDIS_URL', 'redis://0.0.0.0:6379/0')]
             "hosts": [(redis_host, 6379)],
         },
-       "ROUTING": "stickerEconomy.routing.channel_routing", # We will create it in a moment
+       "ROUTING": "stickerEconomy.routing.channel_routing",
     },
 }
 
