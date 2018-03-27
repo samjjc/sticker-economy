@@ -2,6 +2,10 @@ branch-defaults:
   master:
     environment: django-env
     group_suffix: null
+environment-defaults:
+  django-env:
+    branch: null
+    repository: null
 global:
   application_name: stickerEconomy
   branch: null
