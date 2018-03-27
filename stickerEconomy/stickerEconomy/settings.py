@@ -74,7 +74,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'stickerEconomy.wsgi.application'
-ASGI_APPLICATION = 'stickerEconomy.asgi.application'
 
 
 # Database
