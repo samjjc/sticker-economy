@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: stickerEconomy-dev
+    environment: sticker-dev
     group_suffix: null
 environment-defaults:
   stickerEconomy-dev:
