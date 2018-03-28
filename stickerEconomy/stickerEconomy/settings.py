@@ -140,7 +140,7 @@ CHANNEL_LAYERS = {
             # "hosts": [("redis://sticker-redis.ukxx6q.0001.use2.cache.amazonaws.com", 6379)],
             # "hosts": [("redis://:gGu3oR8tCt3GQeoBfQWMD9wOg9EmSPN4@redis-19529.c1.us-west-2-2.ec2.cloud.redislabs.com", 19529)],
             # "hosts": [os.environ.get('REDIS_URL', 'redis://0.0.0.0:6379/0')]
-            "hosts": [(redis_host, 6379)],
+            "hosts": [("redis://sticker.ehauwh.0001.usw2.cache.amazonaws.com", 6379)],
         },
        "ROUTING": "stickerEconomy.routing.channel_routing",
     },
