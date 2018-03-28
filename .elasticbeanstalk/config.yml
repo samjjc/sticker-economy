@@ -2,6 +2,10 @@ branch-defaults:
   master:
     environment: sticker-dev
     group_suffix: null
+environment-defaults:
+  sticker-dev:
+    branch: null
+    repository: null
 global:
   application_name: stickerEconomy
   branch: null

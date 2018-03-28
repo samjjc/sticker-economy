@@ -127,8 +127,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# redis_host = os.environ.get('REDIS_HOST', 'localhost')
-redis_host = "sticker.ehauwh.0001.usw2.cache.amazonaws.com"
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
+# redis_host = "sticker.ehauwh.0001.usw2.cache.amazonaws.com"
 
 # Channel layer definitions
 # http://channels.readthedocs.org/en/latest/deploying.html#setting-up-a-channel-backend
@@ -139,8 +139,9 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             # "hosts": [("redis://sticker-redis.ukxx6q.0001.use2.cache.amazonaws.com", 6379)],
             # "hosts": [("redis://:gGu3oR8tCt3GQeoBfQWMD9wOg9EmSPN4@redis-19529.c1.us-west-2-2.ec2.cloud.redislabs.com", 19529)],
-            # "hosts": [os.environ.get('REDIS_URL', 'redis://0.0.0.0:6379/0')]
-            "hosts": [("redis://sticker.ehauwh.0001.usw2.cache.amazonaws.com", 6379)],
+            # "hosts": ["redis://(redis-19529.c1.us-west-2-2.ec2.cloud.redislabs.com,19529)",]
+            # "hosts": ["redis://sticker.ehauwh.0001.usw2.cache.amazonaws.com"],
+            "hosts": [(redis_host, 6379)],
         },
        "ROUTING": "stickerEconomy.routing.channel_routing",
     },
