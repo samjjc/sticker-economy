@@ -42,6 +42,12 @@ class TradeRequest(models.Model):
     accepted = models.BooleanField(default=False)
     given_completed = models.BooleanField(default=False)
     requested_completed = models.BooleanField(default=False)
+
+    def is_valid(self):
+        valid = True
+        if self.requested_sticker.quantity < self.requested_quantity or self.given_sticker.quantity < self.given_quantity:
+            valid = False
+        return valid
     
 
 

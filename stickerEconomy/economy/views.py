@@ -4,6 +4,7 @@ from .models import Sticker, TradeRequest, Room
 from django.contrib.auth.models import User
 from .forms import StickerForm, SignUpForm, LogInForm, TradeRequestForm
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
 
 # Create your views here.
 def sticker_list(request):
@@ -89,10 +90,12 @@ def sticker_trade(request, pk):
         if form.is_valid():
             trade = form.save(commit=False)
             trade.requested_sticker = sticker
-            trade.save()
-            trade.users.add(request.user,sticker.owner)
-            print(request.user.traderequest_set.values('users'))
-            return redirect('sticker_list')
+            if trade.is_valid():
+                trade.users.add(request.user,sticker.owner)
+                print(request.user.traderequest_set.values('users'))
+                return redirect('sticker_list')
+            else:
+                messages.add_message(request, messages.WARNING, 'Invalid Request.')
     else:
         form = TradeRequestForm(user=request.user, sticker=sticker)
     return render(request, 'economy/sticker_trade.html', {'sticker': sticker, 'form': form})
@@ -119,7 +122,7 @@ def trade_requests(request, pk):
     requests = sticker.requested.filter(accepted=False)
     return render(request, 'economy/trade_requests.html', {'requests': requests})
 
-def messages(request):
+def message(request):
     current_user = request.user
     rooms = current_user.room_set.filter(active=True)
     for room in rooms:
