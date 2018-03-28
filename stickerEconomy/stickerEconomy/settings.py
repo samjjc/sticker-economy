@@ -14,6 +14,16 @@ import os
 from django.conf import settings
 
 
+if 'DJANGO_DEVELOPMENT' in os.environ:
+    DEBUG = False
+    redis_host = "sticker-redis.ehauwh.0001.usw2.cache.amazonaws.com"
+    ALLOWED_HOSTS = ['stick-dev.us-west-2.elasticbeanstalk.com']
+else:
+    DEBUG = True
+    redis_host = 'localhost'
+    ALLOWED_HOSTS = ['localhost']
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,9 +35,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'cvzlcb=$vret=bxk#5wr1dl5%x#*m0wojp^c$fowugv1gcc$#w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['stick-dev.us-west-2.elasticbeanstalk.com']
 
 
 # Application definition
@@ -127,9 +135,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# redis_host = os.environ.get('REDIS_HOST', 'localhost')
-redis_host = "sticker-redis.ehauwh.0001.usw2.cache.amazonaws.com"
-
 # Channel layer definitions
 # http://channels.readthedocs.org/en/latest/deploying.html#setting-up-a-channel-backend
 CHANNEL_LAYERS = {
@@ -137,10 +142,6 @@ CHANNEL_LAYERS = {
         # This example app uses the Redis channel layer implementation asgi_redis
         "BACKEND": "asgi_redis.RedisChannelLayer",
         "CONFIG": {
-            # "hosts": [("redis://sticker-redis.ukxx6q.0001.use2.cache.amazonaws.com", 6379)],
-            # "hosts": [("redis://:gGu3oR8tCt3GQeoBfQWMD9wOg9EmSPN4@redis-19529.c1.us-west-2-2.ec2.cloud.redislabs.com", 19529)],
-            # "hosts": ["redis://(redis-19529.c1.us-west-2-2.ec2.cloud.redislabs.com,19529)",]
-            # "hosts": ["redis://sticker.ehauwh.0001.usw2.cache.amazonaws.com"],
             "hosts": [(redis_host, 6379)],
         },
        "ROUTING": "stickerEconomy.routing.channel_routing",

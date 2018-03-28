@@ -20,13 +20,3 @@ channel_routing = [
     # HTTP handling - e.g. long-polling - you can do it here and route by path, and let the rest
     # fall through to normal views.
 ]
-
-
-# from channels.routing import route
-
-# channel_routing = [
-#     route('websocket.receive', 'chat.consumers.ws_echo'),
-#     route('websocket.connect', 'chat.consumers.ws_add'),
-#     route('websocket.connect', 'chat.consumers.ws_add',
-#           path=r'/chat/(<int:room>\w+)'),
-# ]
