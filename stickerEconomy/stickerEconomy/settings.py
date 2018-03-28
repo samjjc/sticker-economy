@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 from django.conf import settings
+from .secrets import secrets
 
 
 if 'DJANGO_DEVELOPMENT' in os.environ:
@@ -32,7 +33,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'cvzlcb=$vret=bxk#5wr1dl5%x#*m0wojp^c$fowugv1gcc$#w'
+SECRET_KEY = secrets['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -91,8 +92,8 @@ ASGI_APPLICATION = 'stickerEconomy.asgi.application'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-AWS_ACCESS_KEY_ID = 'AKIAIAQAJOBWPCAICNYQ'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = secrets['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = secrets['AWS_SECRET_ACCESS_KEY']
 AWS_STORAGE_BUCKET_NAME = 'sticker-economy-bucket'
 
 GS_BUCKET_NAME = 'sticker-economy'
