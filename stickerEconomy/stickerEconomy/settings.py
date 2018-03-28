@@ -27,7 +27,7 @@ SECRET_KEY = 'cvzlcb=$vret=bxk#5wr1dl5%x#*m0wojp^c$fowugv1gcc$#w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sticker-dev.us-west-2.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['stick-dev.us-west-2.elasticbeanstalk.com']
 
 
 # Application definition
