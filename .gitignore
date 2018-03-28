@@ -117,6 +117,3 @@ med
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-
-#secrets
-stickerEconomy/secrets.py
