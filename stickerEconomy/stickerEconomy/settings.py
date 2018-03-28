@@ -127,7 +127,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-redis_host = os.environ.get('REDIS_HOST', 'localhost')
+# redis_host = os.environ.get('REDIS_HOST', 'localhost')
+redis_host = "sticker.ehauwh.0001.usw2.cache.amazonaws.com"
 
 # Channel layer definitions
 # http://channels.readthedocs.org/en/latest/deploying.html#setting-up-a-channel-backend
