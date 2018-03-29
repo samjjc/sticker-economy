@@ -11,18 +11,17 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-from django.conf import settings
 from .secrets import secrets
 
 
-if 'DJANGO_DEVELOPMENT' in os.environ:
-    DEBUG = False
-    redis_host = "sticker-redis.ehauwh.0001.usw2.cache.amazonaws.com"
-    ALLOWED_HOSTS = ['stick-dev.us-west-2.elasticbeanstalk.com']
-else:
-    DEBUG = True
-    redis_host = 'localhost'
-    ALLOWED_HOSTS = ['localhost']
+# if 'DJANGO_DEVELOPMENT' in os.environ:
+#     DEBUG = False
+#     redis_host = "sticker-redis.ehauwh.0001.usw2.cache.amazonaws.com"
+#     ALLOWED_HOSTS = ['stick-dev.us-west-2.elasticbeanstalk.com']
+# else:
+DEBUG = True
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
+ALLOWED_HOSTS = ['localhost']
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -35,7 +34,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = secrets['SECRET_KEY']
 
-# SECURITY WARNING: don't run with debug turned on in production!
 
 
 
@@ -48,8 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'economy',
     'channels',
+    'economy',
     'storages',
 ]
 
@@ -81,14 +79,13 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = 'stickerEconomy.routing.application'
 WSGI_APPLICATION = 'stickerEconomy.wsgi.application'
-ASGI_APPLICATION = 'stickerEconomy.asgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-# DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
@@ -96,7 +93,6 @@ AWS_ACCESS_KEY_ID = secrets['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = secrets['AWS_SECRET_ACCESS_KEY']
 AWS_STORAGE_BUCKET_NAME = 'sticker-economy-bucket'
 
-GS_BUCKET_NAME = 'sticker-economy'
 
 if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
@@ -141,11 +137,11 @@ AUTH_PASSWORD_VALIDATORS = [
 CHANNEL_LAYERS = {
     "default": {
         # This example app uses the Redis channel layer implementation asgi_redis
-        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [(redis_host, 6379)],
         },
-       "ROUTING": "stickerEconomy.routing.channel_routing",
+    #    "ROUTING": "stickerEconomy.routing.channel_routing",
     },
 }
 

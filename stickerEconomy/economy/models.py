@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import json
-from channels import Group
+# from channels import Group
 
 from django.conf import settings
 # Create your models here.
@@ -59,13 +59,13 @@ class Room(models.Model):
     active = models.BooleanField(default=False)
 
 
-    @property
-    def websocket_group(self):
-        """
-        Returns the Channels Group that sockets should subscribe to to get sent
-        messages as they are generated.
-        """
-        return Group("room-%s" % self.id)
+    # @property
+    # def websocket_group(self):
+    #     """
+    #     Returns the Channels Group that sockets should subscribe to to get sent
+    #     messages as they are generated.
+    #     """
+    #     return Group("room-%s" % self.id)
 
     def send_message(self, message):
         """
