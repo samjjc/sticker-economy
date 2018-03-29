@@ -1,15 +1,11 @@
-django
+django 
 gunicorn
-django-heroku
 psycopg2
 pip
 psycopg2-binary
 pillow
-daphne ==1.3
-channels==1.1.8
-asgi-redis
-websocket-client
-rope
+daphne
+channels
+channels_redis
 django-storages
-google-cloud-storage
 boto3
