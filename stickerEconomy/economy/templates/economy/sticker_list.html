@@ -1,4 +1,10 @@
 {% extends 'economy/base.html' %}
+{% load staticfiles %}
+
+{% block extra_head %}
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/infinite.min.js' %}"></script>
+{% endblock %}
 
 {% block content %}
     {% for sticker in stickers %}
