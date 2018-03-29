@@ -5,10 +5,19 @@ from django.contrib.auth.models import User
 from .forms import StickerForm, SignUpForm, LogInForm, TradeRequestForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 def sticker_list(request):
-    stickers = Sticker.objects.all()
+    sticker_list = Sticker.objects.all()
+    paginator = Paginator(sticker_list, 3)
+    page = request.GET.get('page', 1)
+    try:
+        stickers = paginator.page(page)
+    except PageNotAnInteger:
+        stickers = paginator.page(1)
+    except EmptyPage:
+        stickers = paginator.page(paginator.num_pages)
     return render(request, 'economy/sticker_list.html', {'stickers': stickers})
 
 def sticker_detail(request, pk):
@@ -91,6 +100,7 @@ def sticker_trade(request, pk):
             trade = form.save(commit=False)
             trade.requested_sticker = sticker
             if trade.is_valid():
+                trade.save()
                 trade.users.add(request.user,sticker.owner)
                 print(request.user.traderequest_set.values('users'))
                 return redirect('sticker_list')
@@ -115,7 +125,7 @@ def accept_trade(request, pk):
         room.save()
         room.users.add(trade.given_sticker.owner)
         room.users.add(trade.requested_sticker.owner)
-    return redirect('messages')
+    return redirect('message')
 
 def trade_requests(request, pk):
     sticker = get_object_or_404(Sticker, pk=pk)

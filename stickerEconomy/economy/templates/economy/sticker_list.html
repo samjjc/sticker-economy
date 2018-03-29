@@ -7,15 +7,29 @@
 {% endblock %}
 
 {% block content %}
-    {% for sticker in stickers %}
-        <div class="jumbotron row">
-            <div class = "col-md-6">
-                <h1><a href="{% url 'sticker_detail' pk=sticker.pk %}">{{ sticker.title }}</a></h1>
-                <p>Quanitiy: {{ sticker.quantity }}</p>
+    <div class="infinite-container">
+        {% for sticker in stickers %}
+            <div class="infinite-item">
+                <div class="jumbotron row">
+                    <div class = "col-md-6">
+                        <h1><a href="{% url 'sticker_detail' pk=sticker.pk %}">{{ sticker.title }}</a></h1>
+                        <p>Quanitiy: {{ sticker.quantity }}</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <img src="{{ sticker.image.url }}" alt="Sticker image" height="200"></img>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-6">
-                <img src="{{ sticker.image.url }}" alt="Sticker image" height="200"></img>
-            </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
+
+    {% if stickers.has_next %}
+        <a class="infinite-more-link" href="?page={{ stickers.next_page_number }}">More</a>
+    {% endif %}
+
+    <script>
+        var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0]
+        });
+    </script>
 {% endblock %}
