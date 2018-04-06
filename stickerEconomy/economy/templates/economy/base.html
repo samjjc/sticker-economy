@@ -8,7 +8,8 @@
         <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
-        {% block extra_head %}{% endblock %}
+        {% block extra_head %}
+        {% endblock %}
     </head>
     <body>
             {% if user.is_authenticated %}
