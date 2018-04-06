@@ -21,7 +21,13 @@ COMPELTED_MESSAGE = "A trade has been Completed"
 def ws_connect(message):
     message.reply_channel.send({"accept": True})
     message.channel_session['rooms'] = []
-    message.user.room_set.all()
+    web = list(message.user.room_set.all())
+    for room in web:
+        if(room.active):
+            room.websocket_group.add(message.reply_channel)
+            # message.channel_session['rooms'].append(l.websocket_group)
+            message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([room.id]))
+        print(message.channel_session['rooms'])
 
 @channel_session_user
 def ws_disconnect(message):
@@ -60,11 +66,10 @@ def chat_join(message):
     # Note that, because of channel_session_user, we have a message.user
     # object that works just like request.user would. Security!
 
+    print("JOIN")
+    print(message.user)
     room = get_room_or_error(message["room"], message.user)
 
-    # Send a "enter message" to the room if available
-    # if settings.NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-    # room.send_message(None, message.user, settings.MSG_TYPE_ENTER)
 
     # OK, add them in. The websocket_group is what we'll send messages
     # to so that everyone in the chat room gets them.
@@ -75,7 +80,6 @@ def chat_join(message):
     # join rooms automatically.
     messages = list(room.message_set.order_by('created_date').values('message', 'sender__username','msg_type'))
     other_user=room.users.exclude(pk=message.user.pk).get()
-    # print(other_user.traderequest_set.filter(users=other_user))
     trade_requests = list(TradeRequest.objects.filter(accepted=True, users=other_user.pk).filter(users=message.user.pk).values('pk','requested_sticker__title','given_sticker__title','requested_sticker__image','requested_sticker__quantity','given_sticker__image', 'given_sticker__quantity','requested_quantity','given_quantity','given_completed','requested_completed', 'given_sticker__owner'))
 
     message.reply_channel.send({
@@ -93,10 +97,6 @@ def chat_join(message):
 def chat_leave(message):
     # Reverse of join - remove them from everything.
     room = get_room_or_error(message["room"], message.user)
-
-    # Send a "leave message" to the room if available
-    # if settings.NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-    #     room.send_message(None, message.user, settings.MSG_TYPE_LEAVE)
 
     room.websocket_group.discard(message.reply_channel)
     message.channel_session['rooms'] = list(set(message.channel_session['rooms']).difference([room.id]))
